@@ -59,4 +59,30 @@ Refer to the `defaults` for the options available.
 
 ### Initialise Vault
 
-The `init.yml` playbook initialises a Vault cluster.
+The `init.yml` playbook initialises a Vault cluster. You might want to read up the
+[concepts](https://www.vaultproject.io/docs/concepts/seal.html) regarding sealing and unsealing
+a Vault server.
+
+By default, the playbook assumes the following:
+
+- The Vault server does not enforce client TLS authentication
+- Vault server is initialised with five key shares with a threshold of three.
+
+If these assumptions do not hold, you can modify the playbook accordingly and change the variables
+for the roles.
+
+You will then need to configure the following variables:
+
+- `ca_cert` and `ca_cert_copy`: If `ca_cert_copy` is True, then `ca_cert` is a path on the local computer of the certificate of the CA that signed the Vault server TLS certificate. Otherwise, `ca_cert` is the path on the remote server of the certificate of the CA that signed the Vault server TLS certificate.
+- `tls_skip_verify`: If set to True, the Vault CLI will not validate the certificate. This is not recommended.-
+- `unseal_keys_output`: Directory to output the unseal keys to.
+- `root_token_output`: Path to output the root tokens to.
+
+__DO NOT__ lose the unseal keys. This is the only time in the lifetime of your Vault server where
+the unseal keys are available to you. If you lose the keys, your data will be lost and
+unrecoverable.
+
+You can distribute the keys after this. You might want to consider encrypting the keys if you, for
+some reason, want to check the keys into source control. You can consider using the
+[`kms-aes`](https://github.com/GovTechSG/kms-aes/) utilities to encrypt your unseal keys with KMS
+if you use AWS.

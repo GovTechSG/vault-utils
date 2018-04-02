@@ -6,6 +6,9 @@
   vars:
     ca_cert: "{{ playbook_dir }}/ca.crt"
     ca_cert_copy: True
+    tls_skip_verify: false
+    unseal_keys_output: "{{ playbook_dir }}/unseal"
+    root_token_output: "{{ playbook_dir }}/root/root.key"
   tasks:
     - include_role:
         name: filters
