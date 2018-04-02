@@ -1,3 +1,8 @@
 *.retry
 *.pyc
 inventory
+
+# Ignore default paths used by playbooks and roles
+ca.crt
+root
+unseal

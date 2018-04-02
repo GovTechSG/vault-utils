@@ -5,6 +5,7 @@
 - hosts: all
   vars:
     ca_cert: "{{ playbook_dir }}/ca.crt"
+    ca_cert_copy: True
   tasks:
     - include_role:
         name: filters
@@ -12,4 +13,6 @@
         - always
     - include_role:
         name: vault-env
-
+    - include_role:
+        name: vault-init
+      run_once: True

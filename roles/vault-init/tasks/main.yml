@@ -1,0 +1,55 @@
+---
+- name: Create output directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ unseal_keys_output }}"
+    - "{{ root_token_output | dirname }}"
+  delegate_to: localhost
+- name: Initialise Vault
+  shell: |
+    vault operator init \
+      -key-shares={{ key_shares }} \
+      -key-threshold={{ key_threshold }} \
+      -format json
+  environment: "{{ vault_env }}"
+  register: vault_init
+- name: Parse output
+  set_fact:
+    vault_init_parsed: "{{ vault_init.stdout | from_json }}"
+  # Example JSON:
+  # {
+  #   "unseal_keys_b64": [
+  #     "xxx",
+  #     "xxx",
+  #     "xxx",
+  #     "xxx",
+  #     "xxx"
+  #   ],
+  #   "unseal_keys_hex": [
+  #     "xxx",
+  #     "xxx",
+  #     "xxx",
+  #     "xxx",
+  #     "xxx"
+  #   ],
+  #   "unseal_shares": 5,
+  #   "unseal_threshold": 3,
+  #   "recovery_keys_b64": [],
+  #   "recovery_keys_hex": [],
+  #   "recovery_keys_shares": 5,
+  #   "recovery_keys_threshold": 3,
+  #   "root_token": "xxx"
+  # }
+- name: Write unseal keys
+  copy:
+    dest: "{{ unseal_keys_output }}/{{ item.0 }}"
+    content: "{{ item.1 }}"
+  with_indexed_items: "{{ vault_init_parsed.unseal_keys_hex }}"
+  delegate_to: localhost
+- name: Write Root Token
+  copy:
+    content: "{{ vault_init_parsed.root_token }}"
+    dest: "{{ root_token_output }}"
+  delegate_to: localhost

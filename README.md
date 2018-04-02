@@ -51,6 +51,8 @@ that the Vault CLI will use. This fact can then be passed as
 [environment variable](https://docs.ansible.com/ansible/latest/user_guide/playbooks_environment.html)
 dictionary when executing the various Vault CLI commands.
 
+Optionally, this role can also copy any necessary certificates to the remote server.
+
 Refer to the `defaults` for the options available.
 
 ## Playbooks

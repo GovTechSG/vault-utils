@@ -1,12 +1,45 @@
 ---
+- name: Copy CA Certificate
+  block:
+    - name: Create Temporary File
+      tempfile:
+        state: file
+      register: ca_cert_remote
+    - name: Copy file over
+      copy:
+        src: "{{ ca_cert }}"
+        dest: "{{ ca_cert_remote.path }}"
+  when: ca_cert_copy
+- name: Copy Client Certificate
+  block:
+    - name: Create Temporary File
+      tempfile:
+        state: file
+      register: client_cert_remote
+    - name: Copy file over
+      copy:
+        src: "{{ client_cert }}"
+        dest: "{{ client_cert_remote.path }}"
+  when: client_cert_copy
+- name: Copy Client Key
+  block:
+    - name: Create Temporary File
+      tempfile:
+        state: file
+      register: client_key_remote
+    - name: Copy file over
+      copy:
+        src: "{{ client_key }}"
+        dest: "{{ client_key_remote.path }}"
+  when: client_key_copy
 - name: Generate JSON
   set_fact:
     vault_env_yaml: |
       VAULT_TOKEN: "{{ token }}"
       VAULT_ADDR: "{{ address }}"
-      VAULT_CACERT: "{{ ca_cert }}"
-      VAULT_CLIENT_CERT: "{{ client_cert }}"
-      VAULT_CLIENT_KEY: "{{ client_key }}"
+      VAULT_CACERT: "{{ ca_cert_copy | ternary(ca_cert_remote.path, ca_cert) }}"
+      VAULT_CLIENT_CERT: "{{ client_cert_copy | ternary(client_cert_remote.path, client_cert) }}"
+      VAULT_CLIENT_KEY: "{{ client_key_copy | ternary(client_key_remote.path, client_key) }}"
       VAULT_SKIP_VERIFY: "{{ tls_skip_verify | omit_if_false }}"
       VAULT_TLS_SERVER_NAME: "{{ tls_server_name }}"
       # The following is forced to true because we are piping everything through Ansible

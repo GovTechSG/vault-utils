@@ -5,16 +5,33 @@ fact_key: "vault_env"
 token: ""
 # Address of the Vault server.
 address: "https://127.0.0.1:8200"
-# Path on the local disk to a single PEM-encoded CA certificate to verify
+
+# Path to a single PEM-encoded CA certificate to verify
 # the Vault server's SSL certificate.
 ca_cert: ""
+# If set to true, the path given in `ca_cert` is treated as a local path and copied to a temporary
+# directory on the remote server. The path provided to Vault CLI will then be the temporary path
+# on the remote server
+ca_cert_copy: false
+
 # Path on the local disk to a single PEM-encoded CA certificate to use
 # for TLS authentication to the Vault server. If this is specified,
 # client_key is also required.
 client_cert: ""
+# If set to true, the path given in `client_cert` is treated as a local path and copied to a temporary
+# directory on the remote server. The path provided to Vault CLI will then be the temporary path
+# on the remote server
+client_cert_copy: false
+
 # Path on the local disk to a single PEM-encoded private key matching the
 # client certificate from client_cert
 client_key: ""
+# If set to true, the path given in `client_key` is treated as a local path and copied to a temporary
+# directory on the remote server. The path provided to Vault CLI will then be the temporary path
+# on the remote server
+client_key_copy: false
+
+
 # Name to use as the SNI host when connecting to the Vault server via TLS.
 tls_server_name: ""
 # Disable verification of TLS certificates. Using this option is highly

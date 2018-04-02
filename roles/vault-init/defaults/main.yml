@@ -1,7 +1,13 @@
 ---
+# Environment variable to pass to the vault CLI
+vault_env: {}
 # Number of key shares to split the generated master key into.
 # This is the number of "unseal keys" to generate.
 key_shares: 5
 # Number of key shares required to reconstruct the master key.
 # This must be less than or equal to key_shares
 key_threshold: 3
+# Directory to output the unseal keys to
+unseal_keys_output: "{{ playbook_dir }}/unseal"
+# Path to output the root token to
+root_token_output: "{{ playbook_dir }}/root/root.key"
