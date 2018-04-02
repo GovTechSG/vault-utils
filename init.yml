@@ -1,0 +1,15 @@
+##############################################################
+# This Playbook initialises a Vault cluster
+##############################################################
+---
+- hosts: all
+  vars:
+    ca_cert: "{{ playbook_dir }}/ca.crt"
+  tasks:
+    - include_role:
+        name: filters
+      tags:
+        - always
+    - include_role:
+        name: vault-env
+

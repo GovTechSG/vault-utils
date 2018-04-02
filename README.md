@@ -37,6 +37,24 @@ can use the
 [helper script](https://github.com/GovTechSG/terraform-modules/tree/master/modules/core#post-terraforming-tasks)
 to automatically generate the inventory.
 
+## Roles
+
+### `filters`
+
+This role contains some Ansible filters that are used by the rest of the roles.
+
+### `vault-env`
+
+This role sets host facts containing various
+[environment variables](https://www.vaultproject.io/docs/commands/index.html#environment-variables)
+that the Vault CLI will use. This fact can then be passed as
+[environment variable](https://docs.ansible.com/ansible/latest/user_guide/playbooks_environment.html)
+dictionary when executing the various Vault CLI commands.
+
+Refer to the `defaults` for the options available.
+
 ## Playbooks
 
-__TODO__
+### Initialise Vault
+
+The `init.yml` playbook initialises a Vault cluster.

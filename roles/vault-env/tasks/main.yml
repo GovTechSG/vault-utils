@@ -1,0 +1,20 @@
+---
+- name: Generate JSON
+  set_fact:
+    vault_env_yaml: |
+      VAULT_TOKEN: "{{ token }}"
+      VAULT_ADDR: "{{ address }}"
+      VAULT_CACERT: "{{ ca_cert }}"
+      VAULT_CLIENT_CERT: "{{ client_cert }}"
+      VAULT_CLIENT_KEY: "{{ client_key }}"
+      VAULT_SKIP_VERIFY: "{{ tls_skip_verify | omit_if_false }}"
+      VAULT_TLS_SERVER_NAME: "{{ tls_server_name }}"
+      # The following is forced to true because we are piping everything through Ansible
+      VAULT_CLI_NO_COLOR: "true"
+- name: "Set Fact `{{ fact_key }}`"
+  # See https://stackoverflow.com/questions/38143647/set-fact-with-dynamic-key-name-in-ansible
+  set_fact: {"{{ fact_key }}":"{{ vault_env_yaml | from_yaml | omit_empty }}"}
+- name: Debug CLI environment variable
+  debug:
+    var: "{{ fact_key }}"
+    verbosity: 1
