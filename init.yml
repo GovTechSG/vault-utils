@@ -4,6 +4,7 @@
 ---
 - hosts: all
   vars:
+    address: "https://127.0.0.1:8200"
     ca_cert: "{{ playbook_dir }}/ca.crt"
     ca_cert_copy: True
     tls_skip_verify: false

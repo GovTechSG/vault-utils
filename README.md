@@ -37,6 +37,29 @@ can use the
 [helper script](https://github.com/GovTechSG/terraform-modules/tree/master/modules/core#post-terraforming-tasks)
 to automatically generate the inventory.
 
+## Interacting with the Vault Server
+
+Ansible usually involves a local controlling server executing commands on a Remote server. This
+usually involves opening a SSH connection to a remote server to execute commands.
+
+For the purposes of the scripts in this repository, you can perform tasks using either by:
+
+- Performing a SSH to one or more Vault servers and then executing the Vault CLI remotely on the Vault servers themselves using `localhost`.
+- Providing a HTTPS endpoint to one or more Vault servers and then executing the task locally with the CLI using the provided address.
+
+The `vault-env` role documented below will facilitate the kinds of connection needed.
+
+If you intend to execute the CLI commands locally using a remote Vault server address, you might
+want to add the following switches to Ansible:
+
+```bash
+ansible-playbook \
+    -i "localhost", \ # Use a "localhost" Inventory
+    -c local \ # Use a "local" connection
+    -e "address=https://vault.example.com" \ # Provide the URL to the Vault Server
+    playbook.yml
+```
+
 ## Roles
 
 ### `filters`
@@ -73,8 +96,9 @@ for the roles.
 
 You will then need to configure the following variables:
 
+- `address`: Address of the Vault server for the CLI to connect to.
 - `ca_cert` and `ca_cert_copy`: If `ca_cert_copy` is True, then `ca_cert` is a path on the local computer of the certificate of the CA that signed the Vault server TLS certificate. Otherwise, `ca_cert` is the path on the remote server of the certificate of the CA that signed the Vault server TLS certificate.
-- `tls_skip_verify`: If set to True, the Vault CLI will not validate the certificate. This is not recommended.-
+- `tls_skip_verify`: If set to True, the Vault CLI will not validate the certificate. This is not recommended.
 - `unseal_keys_output`: Directory to output the unseal keys to.
 - `root_token_output`: Path to output the root tokens to.
 
