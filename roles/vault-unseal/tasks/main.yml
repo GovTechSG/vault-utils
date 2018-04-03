@@ -1,0 +1,26 @@
+---
+- name: Get Temporary File to write Unseal key to
+  tempfile:
+    state: file
+  register: unseal_temp
+- name: Write key to temporary file
+  copy:
+    content: "{{ unseal_key }}"
+    dest: "{{ unseal_temp.path }}"
+- name: Unseal server
+  shell: |
+    vault operator unseal --format yaml "$(< {{ unseal_temp.path }})"
+  args:
+    executable: /bin/bash
+  environment: "{{ vault_env }}"
+  register: unseal
+- name: Parse unseal status
+  set_fact:
+    unseal_parsed: "{{ unseal.stdout | from_yaml }}"
+- name: Unseal status
+  debug:
+    var: unseal_parsed
+- name: Delete temporary file
+  file:
+    state: absent
+    path: "{{ unseal_temp.path }}"

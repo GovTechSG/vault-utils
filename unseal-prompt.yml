@@ -1,0 +1,24 @@
+##############################################################
+# This Playbook unseals a Vault cluster via prompting for an unseal key
+# Re-run this until the threshold number of keys are provided.
+##############################################################
+---
+- hosts: all
+  vars:
+    address: "https://127.0.0.1:8200"
+    ca_cert: "{{ playbook_dir }}/ca.crt"
+    ca_cert_copy: True
+    tls_skip_verify: false
+  vars_prompt:
+    - name: "unseal_key"
+      prompt: "Provide an unseal key for Vault"
+      private: yes
+  tasks:
+    - include_role:
+        name: filters
+      tags:
+        - always
+    - include_role:
+        name: vault-env
+    - include_role:
+        name: vault-unseal

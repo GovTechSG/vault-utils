@@ -78,6 +78,24 @@ Optionally, this role can also copy any necessary certificates to the remote ser
 
 Refer to the `defaults` for the options available.
 
+### `vault-init`
+
+This role
+[initialise](https://www.vaultproject.io/intro/getting-started/deploy.html#initializing-the-vault)
+a new Vault server. This is the only time the Unseal key for a Vault server is ever available. If
+you lose the unseal keys, you will not be able to recover the data from your Vault server.
+
+You can use the `init.yml` playbook to use this Role.
+
+### `vault-unseal`
+
+This role [unseals](https://www.vaultproject.io/docs/concepts/seal.html) a Vault server with one
+unseal token.
+
+For security reasons, you generally should use the
+[`vault operator unseal`](https://www.vaultproject.io/docs/commands/operator/unseal.html) command
+directly. This role is provided in case you want to unseal multiple servers automatically.
+
 ## Playbooks
 
 ### Initialise Vault
@@ -85,6 +103,9 @@ Refer to the `defaults` for the options available.
 The `init.yml` playbook initialises a Vault cluster. You might want to read up the
 [concepts](https://www.vaultproject.io/docs/concepts/seal.html) regarding sealing and unsealing
 a Vault server.
+
+This playbook should not be executed locally, especially if your Vault remote endpoint is behind a
+load balancer.
 
 By default, the playbook assumes the following:
 
@@ -110,3 +131,27 @@ You can distribute the keys after this. You might want to consider encrypting th
 some reason, want to check the keys into source control. You can consider using the
 [`kms-aes`](https://github.com/GovTechSG/kms-aes/) utilities to encrypt your unseal keys with KMS
 if you use AWS.
+
+## Unseal Vault via Prompts
+
+The `unseal-prompt.yml` playbook prompts for one unseal token to unseal every Vault server in your
+inventory. You might want to read up the
+[concepts](https://www.vaultproject.io/docs/concepts/seal.html) regarding sealing and unsealing
+a Vault server. You should run this playbook as many times as needed.
+
+This playbook should not be executed locally, especially if your Vault remote endpoint is behind a
+load balancer.
+
+By default, the playbook assumes the following:
+
+- The Vault server does not enforce client TLS authentication
+- A human is manually executing the playbook to provide the unseal key.
+
+If these assumptions do not hold, you can modify the playbook accordingly and change the variables
+for the roles.
+
+You will then need to configure the following variables:
+
+- `address`: Address of the Vault server for the CLI to connect to.
+- `ca_cert` and `ca_cert_copy`: If `ca_cert_copy` is True, then `ca_cert` is a path on the local computer of the certificate of the CA that signed the Vault server TLS certificate. Otherwise, `ca_cert` is the path on the remote server of the certificate of the CA that signed the Vault server TLS certificate.
+- `tls_skip_verify`: If set to True, the Vault CLI will not validate the certificate. This is not recommended.

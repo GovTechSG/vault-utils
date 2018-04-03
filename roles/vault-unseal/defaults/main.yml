@@ -1,0 +1,7 @@
+---
+# Environment variable to pass to the vault CLI
+vault_env: {}
+# Unseal key in hexadecimal or Base64
+unseal_key: ""
+# Discard any previously entered keys to the unseal process.
+reset: false
