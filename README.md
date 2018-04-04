@@ -3,6 +3,16 @@
 This repository contains some helper Ansible playbooks and roles to manage a
 [Vault](https://www.vaultproject.io/) installation.
 
+## Alternatives
+
+There are other Ansible lookup plugins and modules to manage Vault. These plugins differ from this
+repository in that they use the HTTP API of Vault directly. This module simply invokes the Vault
+CLI.
+
+- [Official Lookup Plugin](https://github.com/ansible/ansible/blob/devel/lib/ansible/plugins/lookup/hashi_vault.py)
+- [Lookup Plugin](https://github.com/jhaals/ansible-vault)
+- [Ansible Module](https://github.com/TerryHowe/ansible-modules-hashivault)
+
 ## Pre-requisite
 
 - A Vault Cluster setup
