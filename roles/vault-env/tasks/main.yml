@@ -37,9 +37,9 @@
     vault_env_yaml: |
       VAULT_TOKEN: "{{ token }}"
       VAULT_ADDR: "{{ address }}"
-      VAULT_CACERT: "{{ ca_cert_copy | ternary(ca_cert_remote.path, ca_cert) }}"
-      VAULT_CLIENT_CERT: "{{ client_cert_copy | ternary(client_cert_remote.path, client_cert) }}"
-      VAULT_CLIENT_KEY: "{{ client_key_copy | ternary(client_key_remote.path, client_key) }}"
+      VAULT_CACERT: "{{ ca_cert_copy | ternary(ca_cert_remote.path | default(''), ca_cert) }}"
+      VAULT_CLIENT_CERT: "{{ client_cert_copy | ternary(client_cert_remote.path | default(''), client_cert) }}"
+      VAULT_CLIENT_KEY: "{{ client_key_copy | ternary(client_key_remote.path | default(''), client_key) }}"
       VAULT_SKIP_VERIFY: "{{ tls_skip_verify | omit_if_false }}"
       VAULT_TLS_SERVER_NAME: "{{ tls_server_name }}"
       # The following is forced to true because we are piping everything through Ansible

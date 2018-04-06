@@ -1,0 +1,26 @@
+---
+- name: Create empty remote files dictionary
+  set_fact:
+    write_copied: {}
+- name: Copy files to remote
+  include_tasks: "{{ role_path }}/tasks/copy.yml"
+  vars:
+    file_src: "{{ item.value }}"
+    file_key: "{{ item.key }}"
+  with_dict: "{{ write_local }}"
+- name: Write to server
+  shell: |
+    vault write -format yaml {{ write_path }} \
+      {{ write_values | map_key_value }} \
+      {{ write_copied | map_key_file }} \
+      {{ write_remote | map_key_file }}
+  args:
+    executable: /bin/bash
+  environment: "{{ vault_env }}"
+  register: write_output
+- name: Parse Write status
+  set_fact:
+    write_parsed: "{{ write_output.stdout | from_yaml }}"
+- name: Write status
+  debug:
+    var: write_parsed

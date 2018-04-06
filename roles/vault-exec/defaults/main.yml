@@ -1,0 +1,7 @@
+---
+# Environment variable to pass to the vault CLI
+vault_env: {}
+# Command to execute under vault. Exclude the `vault` keyword
+# Make sure you pass `-format yaml` so that the role can parse any output
+vault_exec: "status"
+parse_output: True

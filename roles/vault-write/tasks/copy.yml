@@ -1,0 +1,15 @@
+---
+# file_src
+# file_key
+# write_copied
+- name: Create temporary file
+  tempfile:
+    state: file
+  register: remote_temp
+- name: Copy over file
+  copy:
+    src: "{{ file_src }}"
+    dest: "{{ remote_temp.path }}"
+- name: Combine dictionary
+  set_fact:
+    write_copied: "{{ write_copied | combine({ file_key: '{{ remote_temp.path }}' }) }}"

@@ -1,0 +1,13 @@
+---
+# Environment variable to pass to the vault CLI
+vault_env: {}
+# Path to write values to
+write_path: secret/foobar
+# Dictionary of values to write
+write_values: {}
+# Dictionary of files to write. The value of the dictionary will be treated as local files that will
+# be copied over to the remote server before writing.
+write_local: {}
+# Dictionary of files to write. The value of the dictionary will be treated as remote files that
+# already exist on the remote machine
+write_remote: {}

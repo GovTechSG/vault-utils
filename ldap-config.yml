@@ -1,0 +1,64 @@
+##############################################################
+# This Playbook enables and configures the LDAP auth method
+##############################################################
+---
+- hosts: all
+  vars:
+    token: ""
+    address: "https://127.0.0.1:8200"
+    ca_cert: "{{ playbook_dir }}/ca.crt"
+    ca_cert_copy: True
+    tls_skip_verify: false
+    ldap_description: ""
+    ldap_path: "ldap"
+    # LDAP Configuration
+    # Refer to https://www.vaultproject.io/docs/auth/ldap.html
+    # Empty values are not written to Vault and ignored. So the defaults in Vault will apply
+    ldap:
+      # Connection
+      url: ""
+      starttls: ""
+      insecure_tls: ""
+      # Binding - Authenticated Search
+      binddn: ""
+      bindpass: ""
+      userdn: ""
+      userattr: ""
+      # Binding - Anonymous Search
+      discoverdn: ""
+      deny_null_bind: ""
+      # Binding - User Principal Name (AD)
+      upndomain: ""
+      # Group Membership Resolution
+      groupfilter: ""
+      groupdn: ""
+      groupattr: ""
+    # Configuration where the input value is a local file
+    ldap_local:
+      certificate: "" # Local path to the LDAP certificate CA
+
+  tasks:
+    - include_role:
+        name: filters
+      tags:
+        - always
+    - include_role:
+        name: vault-env
+    - include_role:
+        name: vault-exec
+      vars:
+        vault_exec: |-
+          auth enable \
+            -description {{ ldap_description | shell_quote }} \
+            -path {{ ldap_path | shell_quote }} \
+            ldap
+        parse_output: false
+      tags:
+        - enable
+    - include_role:
+        name: vault-write
+      vars:
+        write_path: "auth/ldap/config"
+        write_values: "{{ ldap | omit_empty }}"
+        write_local: "{{ ldap_local | omit_empty }}"
+      run_once: True

@@ -1,0 +1,15 @@
+---
+- name: Execute command
+  shell: "vault {{ vault_exec }}"
+  args:
+    executable: /bin/bash
+  environment: "{{ vault_env }}"
+  register: exec_output
+- name: Parse exec status
+  set_fact:
+    exec_parsed: "{{ exec_output.stdout | from_yaml }}"
+  when: parse_output
+- name: Exec status
+  debug:
+    var: exec_parsed
+  when: parse_output
