@@ -1,0 +1,28 @@
+##############################################################
+# This Playbook seals all the vault servers
+##############################################################
+---
+- hosts: all
+  vars:
+    token: ""
+    address: "https://127.0.0.1:8200"
+    ca_cert: "{{ playbook_dir }}/ca.crt"
+    ca_cert_copy: True
+    tls_skip_verify: false
+  tasks:
+    - include_role:
+        name: filters
+      tags:
+        - always
+    - include_role:
+        name: vault-env
+    - include_role:
+        name: vault-exec
+      vars:
+        vault_exec: |-
+          operator seal
+        parse_output: false
+      # Cannot seal while in standby. So we try to seal an active server while the standby servers
+      # fail, and we retry until we get everything sealed.
+      retries: "{{ (groups['all'] | length) + 1 }}"
+      delay: 10

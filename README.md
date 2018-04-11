@@ -174,6 +174,22 @@ You will then need to configure the following variables:
 - `ca_cert` and `ca_cert_copy`: If `ca_cert_copy` is True, then `ca_cert` is a path on the local computer of the certificate of the CA that signed the Vault server TLS certificate. Otherwise, `ca_cert` is the path on the remote server of the certificate of the CA that signed the Vault server TLS certificate.
 - `tls_skip_verify`: If set to True, the Vault CLI will not validate the certificate. This is not recommended.
 
+## Seal Servers
+
+The `seal.yml` playbook seals servers. This will cause downtime.
+
+By default, the playbook assumes the following:
+
+- The Vault server does not enforce client TLS authentication
+
+You will then need to configure the following variables:
+
+- `token`: A Vault token.
+- `address`: Address of the Vault server for the CLI to connect to.
+- `ca_cert` and `ca_cert_copy`: If `ca_cert_copy` is True, then `ca_cert` is a path on the local computer of the certificate of the CA that signed the Vault server TLS certificate. Otherwise, `ca_cert` is the path on the remote server of the certificate of the CA that signed the Vault server TLS certificate.
+- `tls_skip_verify`: If set to True, the Vault CLI will not validate the certificate. This is not recommended.
+
+
 ## LDAP Authentication
 
 The `ldap-config.yml` playbook enables and configures Vault for LDAP authentication.
@@ -184,6 +200,7 @@ By default, the playbook assumes the following:
 
 You will then need to configure the following variables:
 
+- `token`: A Vault token.
 - `address`: Address of the Vault server for the CLI to connect to.
 - `ca_cert` and `ca_cert_copy`: If `ca_cert_copy` is True, then `ca_cert` is a path on the local computer of the certificate of the CA that signed the Vault server TLS certificate. Otherwise, `ca_cert` is the path on the remote server of the certificate of the CA that signed the Vault server TLS certificate.
 - `tls_skip_verify`: If set to True, the Vault CLI will not validate the certificate. This is not recommended.

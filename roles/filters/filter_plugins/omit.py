@@ -1,6 +1,6 @@
 def omit_empty(dictionary):
     """Omit key in dictionary if value is not truthy"""
-    return {key: value for key, value in dictionary.iteritems() if value}
+    return {key: value for key, value in dictionary.items() if value}
 
 
 def omit_if_false(value):
