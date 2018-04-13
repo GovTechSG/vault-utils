@@ -70,6 +70,20 @@ ansible-playbook \
     playbook.yml
 ```
 
+The semantics of where the CLI is executing will affect the Vault server address, the certificate
+validation and the Vault tokens being used.
+
+## Vault Tokens
+
+Vault commands are executed via the Vault CLI and follow its
+[token semantics](https://www.vaultproject.io/docs/commands/index.html#token-helper). In some of the
+playbooks, a `token` variable is expected. This is simply equivalent to providing a token via the
+`VAULT_TOKEN` environment variable.
+
+If this is not provided, the CLI will follow its usual means of finding a token. You must remember
+whether you are executing the CLI command locally on your machine or remotely on another host. The
+CLI will take the tokens *locally* on wherever it is executed.
+
 ## Roles
 
 ### `filters`
@@ -113,6 +127,10 @@ Executes any arbitrary Vault commands.
 ### `vault-wrtie`
 
 Write values to any Vault path.
+
+### `vault-audit-enable`
+
+Enables an [audit device](https://www.vaultproject.io/docs/audit/index.html) for Vault.
 
 ## Playbooks
 
@@ -189,7 +207,6 @@ You will then need to configure the following variables:
 - `ca_cert` and `ca_cert_copy`: If `ca_cert_copy` is True, then `ca_cert` is a path on the local computer of the certificate of the CA that signed the Vault server TLS certificate. Otherwise, `ca_cert` is the path on the remote server of the certificate of the CA that signed the Vault server TLS certificate.
 - `tls_skip_verify`: If set to True, the Vault CLI will not validate the certificate. This is not recommended.
 
-
 ## LDAP Authentication
 
 The `ldap-config.yml` playbook enables and configures Vault for LDAP authentication.
@@ -207,3 +224,44 @@ You will then need to configure the following variables:
 - `ldap_description`: Description of the authentication method.
 - `ldap_path`: Path to mount the authentication on.
 - `1dap` and `ldap_local`: Refer to the playbook and Vault's LDAP documentation on the meaning of the values.
+
+## Enable File Audit Device
+
+The `audit-file.yml` playbook enables a file audit device for Vault.
+
+By default, the playbook assumes the following:
+
+- The Vault server does not enforce client TLS authentication
+- [Defaults](https://www.vaultproject.io/docs/audit/file.html) for the logging device that are not exposed by the variables below are assumed.
+
+You will then need to configure the following variables:
+
+- `token`: A Vault token.
+- `address`: Address of the Vault server for the CLI to connect to.
+- `ca_cert` and `ca_cert_copy`: If `ca_cert_copy` is True, then `ca_cert` is a path on the local computer of the certificate of the CA that signed the Vault server TLS certificate. Otherwise, `ca_cert` is the path on the remote server of the certificate of the CA that signed the Vault server TLS certificate.
+- `tls_skip_verify`: If set to True, the Vault CLI will not validate the certificate. This is not recommended.
+- `audit_path`: Path to mount the the audit device on. Defaults to `file`.
+- `audit_description`: Human friendly description of the Audit device.
+- `file_path`: Path where the log file will be written to.
+- `log_prefix`: A customizable string prefix to write before the actual log line
+
+## Enable Syslog Audit Device
+
+The `audit-syslog.yml` playbook enables a Syslog audit device for Vault.
+
+By default, the playbook assumes the following:
+
+- The Vault server does not enforce client TLS authentication
+- [Defaults](https://www.vaultproject.io/docs/audit/syslog.html) for the logging device that are not exposed by the variables below are assumed.
+
+You will then need to configure the following variables:
+
+- `token`: A Vault token.
+- `address`: Address of the Vault server for the CLI to connect to.
+- `ca_cert` and `ca_cert_copy`: If `ca_cert_copy` is True, then `ca_cert` is a path on the local computer of the certificate of the CA that signed the Vault server TLS certificate. Otherwise, `ca_cert` is the path on the remote server of the certificate of the CA that signed the Vault server TLS certificate.
+- `tls_skip_verify`: If set to True, the Vault CLI will not validate the certificate. This is not recommended.
+- `audit_path`: Path to mount the the audit device on. Defaults to `file`.
+- `audit_description`: Human friendly description of the Audit device.
+- `syslog_facility`: The syslog facility to use.
+- `syslog_tag`: The syslog tag to use.
+- `log_prefix`: A customizable string prefix to write before the actual log line

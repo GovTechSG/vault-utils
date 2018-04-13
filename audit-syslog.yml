@@ -1,0 +1,32 @@
+##############################################################
+# This Playbook enables the Syslog audit device
+##############################################################
+---
+- hosts: all
+  vars:
+    token: ""
+    address: "https://127.0.0.1:8200"
+    ca_cert: "{{ playbook_dir }}/ca.crt"
+    ca_cert_copy: True
+    tls_skip_verify: false
+    audit_path: ""
+    audit_description: ""
+    syslog_facility: "AUTH"
+    syslog_tag: "vault"
+    log_prefix: ""
+
+  tasks:
+    - include_role:
+        name: filters
+      tags:
+        - always
+    - include_role:
+        name: vault-env
+    - include_role:
+        name: vault-audit-enable
+      vars:
+        audit_type: "syslog"
+        audit_options:
+          facility: "{{ syslog_facility }}"
+          tag: "{{ syslog_tag }}"
+          prefix: "{{ log_prefix }}"

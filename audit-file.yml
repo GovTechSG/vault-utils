@@ -1,0 +1,30 @@
+##############################################################
+# This Playbook enables the file audit device
+##############################################################
+---
+- hosts: all
+  vars:
+    token: ""
+    address: "https://127.0.0.1:8200"
+    ca_cert: "{{ playbook_dir }}/ca.crt"
+    ca_cert_copy: True
+    tls_skip_verify: false
+    audit_path: ""
+    audit_description: ""
+    file_path: "/var/log/vault.log"
+    log_prefix: ""
+
+  tasks:
+    - include_role:
+        name: filters
+      tags:
+        - always
+    - include_role:
+        name: vault-env
+    - include_role:
+        name: vault-audit-enable
+      vars:
+        audit_type: "file"
+        audit_options:
+          file_path: "{{ file_path }}"
+          prefix: "{{ log_prefix }}"

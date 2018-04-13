@@ -1,0 +1,11 @@
+---
+# Type of audit device
+audit_type: "file"
+# Human-friendly description for the purpose of this audit device.
+audit_description: ""
+# Place where the audit device will be accessible. This must be unique across all audit devices.
+# This defaults to the "type" of the audit device.
+audit_path: ""
+# Specific Options for the audit device
+audit_options:
+  file_path: /var/log/vault.log

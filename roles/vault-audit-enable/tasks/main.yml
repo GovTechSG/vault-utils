@@ -1,0 +1,10 @@
+---
+- name: Enable Audit Device
+  shell: |
+    vault audit enable \
+      --description {{ audit_description | shell_quote }} \
+      --path {{ audit_path | default(audit_type, true) | shell_quote }} \
+      {{ audit_type }} {{ audit_options | map_key_value }}
+  args:
+    executable: /bin/bash
+  environment: "{{ vault_env }}"
