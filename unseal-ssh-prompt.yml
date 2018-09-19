@@ -4,15 +4,11 @@
 ##############################################################
 ---
 - hosts: all
-  connection: local
-  gather_facts: no
   vars:
-    vault_servers:
-      - "https://127.0.0.1:8200"
+    address: "https://127.0.0.1:8200"
     ca_cert: "{{ playbook_dir }}/ca.crt"
+    ca_cert_copy: True
     tls_skip_verify: false
-    tls_server_name: "vault.service.consul"
-    vault_port: 8200
   vars_prompt:
     - name: "unseal_key"
       prompt: "Provide an unseal key for Vault"
@@ -22,13 +18,7 @@
         name: filters
       tags:
         - always
-      delegate_to: localhost
     - include_role:
         name: vault-env
-      vars:
-        address: "https://{{ inventory_hostname }}:{{ vault_port }}"
-        ca_cert_copy: False
-      delegate_to: localhost
     - include_role:
         name: vault-unseal
-      delegate_to: localhost
