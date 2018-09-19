@@ -188,7 +188,7 @@ for the roles.
 
 You will then need to configure the following variables:
 
-- `port`: The port of the Vault server. Defaults to `8200`.
+- `vault_port`: The port of the Vault server. Defaults to `8200`.
 - `ca_cert`: Path locally to the certificate of the CA that signed the Vault server TLS certificate.
 - `tls_skip_verify`: If set to True, the Vault CLI will not validate the certificate. This is not recommended.
 - `tls_server_name`: The Name to use to verify the certificate. The default is `vault.service.consul`.
