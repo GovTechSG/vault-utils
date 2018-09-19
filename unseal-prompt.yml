@@ -1,14 +1,18 @@
 ##############################################################
 # This Playbook unseals a Vault cluster via prompting for an unseal key
 # Re-run this until the threshold number of keys are provided.
+# You should run this on the localhost
 ##############################################################
 ---
 - hosts: all
+  connection: local
+  gather_facts: no
   vars:
-    address: "https://127.0.0.1:8200"
+    vault_servers:
+      - "https://127.0.0.1:8200"
     ca_cert: "{{ playbook_dir }}/ca.crt"
-    ca_cert_copy: True
     tls_skip_verify: false
+    tls_server_name: "vault.service.consul"
   vars_prompt:
     - name: "unseal_key"
       prompt: "Provide an unseal key for Vault"
@@ -18,7 +22,13 @@
         name: filters
       tags:
         - always
+      delegate_to: localhost
     - include_role:
         name: vault-env
+      vars:
+        address: "https://{{ inventory_hostname }}:8200"
+        ca_cert_copy: False
+      delegate_to: localhost
     - include_role:
         name: vault-unseal
+      delegate_to: localhost

@@ -175,8 +175,8 @@ inventory. You might want to read up the
 [concepts](https://www.vaultproject.io/docs/concepts/seal.html) regarding sealing and unsealing
 a Vault server. You should run this playbook as many times as needed.
 
-This playbook should not be executed locally, especially if your Vault remote endpoint is behind a
-load balancer.
+This playbook will be forced to execute locally. You should provide the list of servers in the
+inventory.
 
 By default, the playbook assumes the following:
 
@@ -188,9 +188,10 @@ for the roles.
 
 You will then need to configure the following variables:
 
-- `address`: Address of the Vault server for the CLI to connect to.
-- `ca_cert` and `ca_cert_copy`: If `ca_cert_copy` is True, then `ca_cert` is a path on the local computer of the certificate of the CA that signed the Vault server TLS certificate. Otherwise, `ca_cert` is the path on the remote server of the certificate of the CA that signed the Vault server TLS certificate.
+- `port`: The port of the Vault server. Defaults to `8200`.
+- `ca_cert`: Path locally to the certificate of the CA that signed the Vault server TLS certificate.
 - `tls_skip_verify`: If set to True, the Vault CLI will not validate the certificate. This is not recommended.
+- `tls_server_name`: The Name to use to verify the certificate. The default is `vault.service.consul`.
 
 ## Seal Servers
 
