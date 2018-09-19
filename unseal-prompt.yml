@@ -13,6 +13,7 @@
     ca_cert: "{{ playbook_dir }}/ca.crt"
     tls_skip_verify: false
     tls_server_name: "vault.service.consul"
+    port: 8200
   vars_prompt:
     - name: "unseal_key"
       prompt: "Provide an unseal key for Vault"
@@ -26,7 +27,7 @@
     - include_role:
         name: vault-env
       vars:
-        address: "https://{{ inventory_hostname }}:8200"
+        address: "https://{{ inventory_hostname }}:{{ port }}"
         ca_cert_copy: False
       delegate_to: localhost
     - include_role:
