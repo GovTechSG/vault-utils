@@ -1,7 +1,6 @@
 ##############################################################
 # This Playbook unseals a Vault cluster via prompting for an unseal key
 # Re-run this until the threshold number of keys are provided.
-# You should run this on the localhost
 ##############################################################
 ---
 - hosts: all
