@@ -111,10 +111,10 @@ you lose the unseal keys, you will not be able to recover the data from your Vau
 
 You can use the `init.yml` playbook to use this Role.
 
-### `vault-unseal`
+### `vault-unseal-ssh`
 
 This role [unseals](https://www.vaultproject.io/docs/concepts/seal.html) a Vault server with one
-unseal token.
+unseal token via SSH.
 
 For security reasons, you generally should use the
 [`vault operator unseal`](https://www.vaultproject.io/docs/commands/operator/unseal.html) command

@@ -21,4 +21,4 @@
     - include_role:
         name: vault-env
     - include_role:
-        name: vault-unseal
+        name: vault-unseal-ssh
